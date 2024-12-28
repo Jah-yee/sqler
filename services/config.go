@@ -1,4 +1,4 @@
-package contracts
+package services
 
 import "log/slog"
 

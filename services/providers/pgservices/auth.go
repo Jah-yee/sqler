@@ -4,8 +4,8 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/alash3al/sqler/contracts"
 	"github.com/alash3al/sqler/models"
+	"github.com/alash3al/sqler/services"
 	"github.com/alash3al/sqltmpl"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/jackc/pgx/v5"
@@ -16,12 +16,12 @@ import (
 )
 
 type JWTAuth struct {
-	cfg  contracts.ConfigService
+	cfg  services.ConfigService
 	pool *pgxpool.Pool
 	tpl  *sqltmpl.Template
 }
 
-func NewJWTAuthService(c contracts.ConfigService, p *pgxpool.Pool, t *sqltmpl.Template) contracts.AuthService {
+func NewJWTAuthService(c services.ConfigService, p *pgxpool.Pool, t *sqltmpl.Template) services.AuthService {
 	return &JWTAuth{
 		cfg:  c,
 		pool: p,

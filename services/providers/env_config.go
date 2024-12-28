@@ -1,8 +1,8 @@
-package services
+package providers
 
 import (
 	"fmt"
-	"github.com/alash3al/sqler/contracts"
+	"github.com/alash3al/sqler/services"
 	"github.com/caarlos0/env/v11"
 	"github.com/joho/godotenv"
 	"log/slog"
@@ -19,7 +19,7 @@ type EnvConfig struct {
 	DatabaseDSN          string `env:"DATABASE_DSN,notEmpty,expand"`
 }
 
-func NewEnvConfig(envFilename string) (contracts.ConfigService, error) {
+func NewEnvConfig(envFilename string) (services.ConfigService, error) {
 	if _, err := os.Stat(envFilename); err == nil {
 		if err := godotenv.Load(envFilename); err != nil {
 			return nil, err

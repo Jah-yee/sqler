@@ -5,8 +5,8 @@ import (
 	"embed"
 	"fmt"
 	"github.com/alash3al/sqler/handlers/console"
-	"github.com/alash3al/sqler/services"
-	"github.com/alash3al/sqler/services/pgservices"
+	"github.com/alash3al/sqler/services/providers"
+	pgservices2 "github.com/alash3al/sqler/services/providers/pgservices"
 	"github.com/alash3al/sqltmpl"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/urfave/cli/v3"
@@ -19,7 +19,7 @@ import (
 var assetsFs embed.FS
 
 func main() {
-	cfg, err := services.NewEnvConfig(".env")
+	cfg, err := providers.NewEnvConfig(".env")
 	if err != nil {
 		panic(err.Error())
 	}
@@ -53,9 +53,9 @@ func main() {
 		},
 	)
 
-	migrationService := pgservices.NewMigrationService(assetsFs, dbConnPool)
-	authService := pgservices.NewJWTAuthService(cfg, dbConnPool, pgSQLTmpl)
-	userService := pgservices.NewUserService(dbConnPool, pgSQLTmpl)
+	migrationService := pgservices2.NewMigrationService(assetsFs, dbConnPool)
+	authService := pgservices2.NewJWTAuthService(cfg, dbConnPool, pgSQLTmpl)
+	userService := pgservices2.NewUserService(dbConnPool, pgSQLTmpl)
 
 	if err := migrationService.Prepare(context.Background()); err != nil {
 		logger.Error(err.Error())

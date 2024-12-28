@@ -4,12 +4,12 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/alash3al/sqler/contracts"
 	"github.com/alash3al/sqler/models"
+	"github.com/alash3al/sqler/services"
 	"github.com/urfave/cli/v3"
 )
 
-func MakeHandler(u contracts.UserService, a contracts.AuthService) *cli.Command {
+func MakeHandler(u services.UserService, a services.AuthService) *cli.Command {
 	return &cli.Command{
 		Name:  "make",
 		Usage: "helper commands that help you create sysadmin user, tokens, ... etc",

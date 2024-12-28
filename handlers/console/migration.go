@@ -3,13 +3,13 @@ package console
 import (
 	"context"
 	"fmt"
-	"github.com/alash3al/sqler/contracts"
+	"github.com/alash3al/sqler/services"
 	"github.com/jedib0t/go-pretty/v6/table"
 	"github.com/jedib0t/go-pretty/v6/text"
 	"github.com/urfave/cli/v3"
 )
 
-func MigrationHandler(m contracts.MigrationService) *cli.Command {
+func MigrationHandler(m services.MigrationService) *cli.Command {
 	return &cli.Command{
 		Name:  "migration",
 		Usage: "database migration related subcommands",

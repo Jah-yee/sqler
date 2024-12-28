@@ -2,8 +2,8 @@ package pgservices
 
 import (
 	"context"
-	"github.com/alash3al/sqler/contracts"
 	"github.com/alash3al/sqler/models"
+	"github.com/alash3al/sqler/services"
 	"github.com/alash3al/sqltmpl"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"golang.org/x/crypto/bcrypt"
@@ -14,7 +14,7 @@ type User struct {
 	tpl  *sqltmpl.Template
 }
 
-func NewUserService(p *pgxpool.Pool, t *sqltmpl.Template) contracts.UserService {
+func NewUserService(p *pgxpool.Pool, t *sqltmpl.Template) services.UserService {
 	return &User{
 		pool: p,
 		tpl:  t,

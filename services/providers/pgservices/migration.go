@@ -4,8 +4,8 @@ import (
 	"bytes"
 	"context"
 	"embed"
-	"github.com/alash3al/sqler/contracts"
 	"github.com/alash3al/sqler/models"
+	"github.com/alash3al/sqler/services"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"io/fs"
@@ -18,7 +18,7 @@ type Migrations struct {
 	pool     *pgxpool.Pool
 }
 
-func NewMigrationService(assetsFS embed.FS, pool *pgxpool.Pool) contracts.MigrationService {
+func NewMigrationService(assetsFS embed.FS, pool *pgxpool.Pool) services.MigrationService {
 	return &Migrations{
 		assetsFS: assetsFS,
 		pool:     pool,
