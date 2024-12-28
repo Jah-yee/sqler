@@ -11,7 +11,8 @@ import (
 
 func MakeHandler(u contracts.UserService, a contracts.AuthService) *cli.Command {
 	return &cli.Command{
-		Name: "make",
+		Name:  "make",
+		Usage: "helper commands that help you create sysadmin user, tokens, ... etc",
 		Commands: []*cli.Command{
 			// make sysadmin
 			{
