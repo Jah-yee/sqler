@@ -12,13 +12,14 @@ import (
 
 type EnvConfig struct {
 	AppName              string `env:"APP_NAME,notEmpty,expand"`
+	JWTSecret            string `env:"JWT_SECRET,notEmpty,expand"`
 	LogLevel             string `env:"LOG_LEVEL,notEmpty,expand"`
 	HTTPServerListenHost string `env:"HTTP_SERVER_HOST,notEmpty,expand"`
 	HTTPServerListenPort int    `env:"HTTP_SERVER_PORT,notEmpty,expand"`
 	DatabaseDSN          string `env:"DATABASE_DSN,notEmpty,expand"`
 }
 
-func NewEnvConfig(envFilename string) (contracts.Config, error) {
+func NewEnvConfig(envFilename string) (contracts.ConfigService, error) {
 	if _, err := os.Stat(envFilename); err == nil {
 		if err := godotenv.Load(envFilename); err != nil {
 			return nil, err
@@ -34,6 +35,10 @@ func NewEnvConfig(envFilename string) (contracts.Config, error) {
 	}
 
 	return &c, nil
+}
+
+func (c EnvConfig) GetJWTSecret() string {
+	return c.JWTSecret
 }
 
 func (c EnvConfig) GetAppName() string {

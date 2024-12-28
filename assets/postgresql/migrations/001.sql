@@ -14,16 +14,20 @@ CREATE TABLE IF NOT EXISTS users (
     created_at TIMESTAMP NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS user_access_tokens (
+-- we don't store the actual token secret here, it is the client responsibility,
+-- it is better to use some sort of signed tokens like JWT, it simplifies the stateless identity transportation between services.
+CREATE TABLE IF NOT EXISTS auth_tokens (
     id BIGSERIAL PRIMARY KEY,
-    value TEXT NOT NULL UNIQUE,
-    user_id BIGINT NOT NULL,
+    owner_type TEXT NOT NULL,
+    owner_id BIGINT NOT NULL,
     expires_at TIMESTAMP,
     user_agent TEXT NOT NULL,
     ip_address INET NOT NULL,
     created_at TIMESTAMP NOT NULL,
     updated_at TIMESTAMP NOT NULL
 );
+
+CREATE INDEX IF NOT EXISTS idx_auth_tokens_owner ON auth_tokens(owner_type, owner_id);
 
 CREATE TABLE IF NOT EXISTS data_sources (
     id BIGSERIAL PRIMARY KEY,

@@ -2,18 +2,11 @@ package contracts
 
 import (
 	"context"
-	"time"
+	"github.com/alash3al/sqler/models"
 )
 
-type Migration interface {
+type MigrationService interface {
 	Prepare(ctx context.Context) error
-	Status(ctx context.Context) ([]MigrationStatusOutputItem, error)
-	Apply(ctx context.Context) ([]MigrationStatusOutputItem, error)
-}
-
-type MigrationStatusOutputItem struct {
-	ID         int64      `json:"id" db:"id"`
-	Filename   string     `json:"filename" db:"filename"`
-	CreatedAt  time.Time  `json:"created_at" db:"created_at"`
-	MigratedAt *time.Time `json:"migrated_at" db:"migrated_at"`
+	Status(ctx context.Context) ([]models.MigrationEntity, error)
+	Apply(ctx context.Context) ([]models.MigrationEntity, error)
 }

@@ -9,7 +9,7 @@ import (
 	"github.com/urfave/cli/v3"
 )
 
-func MigrationHandler(m contracts.Migration) *cli.Command {
+func MigrationHandler(m contracts.MigrationService) *cli.Command {
 	return &cli.Command{
 		Name:  "migration",
 		Usage: "database migration related subcommands",
@@ -27,7 +27,7 @@ func MigrationHandler(m contracts.Migration) *cli.Command {
 					tbl := table.NewWriter()
 
 					tbl.SetStyle(table.StyleLight)
-					tbl.AppendHeader(table.Row{"ID", "Migration", "Migrated At"})
+					tbl.AppendHeader(table.Row{"ID", "MigrationService", "Migrated At"})
 
 					for _, item := range status {
 						tbl.AppendRow(table.Row{item.ID, item.Filename, item.MigratedAt})

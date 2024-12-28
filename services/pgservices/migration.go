@@ -5,6 +5,7 @@ import (
 	"context"
 	"embed"
 	"github.com/alash3al/sqler/contracts"
+	"github.com/alash3al/sqler/models"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"io/fs"
@@ -17,7 +18,7 @@ type Migrations struct {
 	pool     *pgxpool.Pool
 }
 
-func NewMigrations(assetsFS embed.FS, pool *pgxpool.Pool) contracts.Migration {
+func NewMigrationService(assetsFS embed.FS, pool *pgxpool.Pool) contracts.MigrationService {
 	return &Migrations{
 		assetsFS: assetsFS,
 		pool:     pool,
@@ -38,7 +39,7 @@ func (e Migrations) Prepare(ctx context.Context) error {
 		return err
 	}
 
-	migrationFiles, err := fs.Glob(e.assetsFS, "assets/sql/migrations/*.sql")
+	migrationFiles, err := fs.Glob(e.assetsFS, "assets/postgresql/migrations/*.sql")
 	if err != nil {
 		return err
 	}
@@ -53,29 +54,29 @@ func (e Migrations) Prepare(ctx context.Context) error {
 	return nil
 }
 
-func (e Migrations) Status(ctx context.Context) ([]contracts.MigrationStatusOutputItem, error) {
+func (e Migrations) Status(ctx context.Context) ([]models.MigrationEntity, error) {
 	rows, err := e.pool.Query(ctx, `SELECT * FROM migrations ORDER BY filename`)
 	if err != nil {
 		return nil, err
 	}
 
-	return pgx.CollectRows[contracts.MigrationStatusOutputItem](rows, pgx.RowToStructByName)
+	return pgx.CollectRows[models.MigrationEntity](rows, pgx.RowToStructByName)
 }
 
-func (e Migrations) Apply(ctx context.Context) ([]contracts.MigrationStatusOutputItem, error) {
+func (e Migrations) Apply(ctx context.Context) ([]models.MigrationEntity, error) {
 	rows, err := e.pool.Query(ctx, `SELECT * FROM migrations WHERE migrated_at IS NULL ORDER BY filename`)
 	if err != nil {
 		return nil, err
 	}
 
-	queue, err := pgx.CollectRows[contracts.MigrationStatusOutputItem](rows, pgx.RowToStructByName)
+	queue, err := pgx.CollectRows[models.MigrationEntity](rows, pgx.RowToStructByName)
 	if err != nil {
 		return nil, err
 	}
 
 	err = pgx.BeginFunc(ctx, e.pool, func(tx pgx.Tx) error {
 		for i, item := range queue {
-			contents, err := fs.ReadFile(e.assetsFS, filepath.Join("assets/sql/migrations", item.Filename))
+			contents, err := fs.ReadFile(e.assetsFS, filepath.Join("assets/postgresql/migrations", item.Filename))
 			if err != nil {
 				return err
 			}
@@ -83,7 +84,7 @@ func (e Migrations) Apply(ctx context.Context) ([]contracts.MigrationStatusOutpu
 			for _, stmtBytes := range bytes.Split(contents, []byte(";")) {
 				stmtBytes = bytes.TrimSpace(stmtBytes)
 
-				if len(stmtBytes) == 0 || stmtBytes[0] == '-' {
+				if len(stmtBytes) == 0 {
 					continue
 				}
 

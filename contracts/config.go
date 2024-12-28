@@ -2,9 +2,10 @@ package contracts
 
 import "log/slog"
 
-type Config interface {
+type ConfigService interface {
 	GetAppName() string
 	GetLogLevel() (slog.Leveler, error)
+	GetJWTSecret() string
 	GetHTTPServerHost() string
 	GetHTTPServerPort() int
 	GetDatabaseDriver() string
